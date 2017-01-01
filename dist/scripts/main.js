@@ -1,6 +1,4 @@
-var gui, ee;
-
-var DEBUG = true;
+var ee;
 
 function triangulationError(obj) {
   if (invalid.indexOf(obj) == -1) {
@@ -12,20 +10,17 @@ function triangulationError(obj) {
     var oldWarn = console.warn;
     console.warn = function (message) {
       // DO MESSAGE HERE.
-      if (!DEBUG) {
+      if (!globalParameters.debug) {
         oldWarn(message);
       }
       oldWarn.apply(console, arguments);
     };
 })();
 
-
 $(document).ready(function($) {
-  if (!DEBUG) {
+  if (!globalParameters.debug) {
     ee = new EventEmitter();
     ee.addListener('triangulation-error',triangulationError);
   }
-  gui = new dat.GUI();
-  gui.open();
-  initMaterials();
+  createGUI();
 });

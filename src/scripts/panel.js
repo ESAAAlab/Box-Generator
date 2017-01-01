@@ -1,6 +1,5 @@
 var Panel = function(parameters) {
   this.name = 'panel';
-  this.debug = false;
   this.transparent = false;
   this.width = 100;
   this.height = 100;
@@ -71,7 +70,7 @@ Panel.prototype = {
 
   extrude: function() {
     var i,j, len, len1;
-    var path, mesh, simpleShapes, simpleShape, shape3d, x;
+    var path, simpleShapes, simpleShape, shape3d, x;
     var color = new THREE.Color( this.color );
 
     var extrudeSettings = {
@@ -97,44 +96,51 @@ Panel.prototype = {
 
         shape3d = new THREE.ExtrudeGeometry(simpleShape,extrudeSettings);
 
-        mesh = new THREE.Mesh(shape3d, this.transparent ? plywoodMaterialTransparent : plywoodMaterial);
+        this.mesh = new THREE.Mesh(shape3d, this.transparent ? plywoodMaterialTransparent : plywoodMaterial);
+
         // COMPUTE UVS
         shape3d.computeBoundingBox();
         var boundingBox = shape3d.boundingBox;
         var max = boundingBox.max, min = boundingBox.min;
         var offset = new THREE.Vector2(0 - min.x, 0 - min.y);
         var range = new THREE.Vector2(max.x - min.x, max.y - min.y);
-        mesh.geometry.faceVertexUvs[0] = [];
-        for (var k = 0; k < mesh.geometry.faces.length ; k++) {
-          var v1 = mesh.geometry.vertices[mesh.geometry.faces[k].a], v2 = mesh.geometry.vertices[mesh.geometry.faces[k].b], v3 = mesh.geometry.vertices[mesh.geometry.faces[k].c];
-          mesh.geometry.faceVertexUvs[0].push(
+        this.mesh.geometry.faceVertexUvs[0] = [];
+        for (var k = 0; k < this.mesh.geometry.faces.length ; k++) {
+          var v1 = this.mesh.geometry.vertices[this.mesh.geometry.faces[k].a];
+          var v2 = this.mesh.geometry.vertices[this.mesh.geometry.faces[k].b];
+          var v3 = this.mesh.geometry.vertices[this.mesh.geometry.faces[k].c];
+          this.mesh.geometry.faceVertexUvs[0].push(
             [
               new THREE.Vector2((v1.x + offset.x)/range.x ,(v1.y + offset.y)/range.y),
               new THREE.Vector2((v2.x + offset.x)/range.x ,(v2.y + offset.y)/range.y),
               new THREE.Vector2((v3.x + offset.x)/range.x ,(v3.y + offset.y)/range.y)
             ]);
         }
-        mesh.geometry.uvsNeedUpdate = true;
+        this.mesh.geometry.uvsNeedUpdate = true;
 
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        mesh.name = this.name;
-        mesh.rotateX(this.rotation.x);
-        mesh.rotateY(this.rotation.y);
-        mesh.rotateZ(this.rotation.z);
-        mesh.translateX(this.translation.x-this.center.x);
-        mesh.translateY(this.translation.y-this.center.y);
-        mesh.translateZ(this.translation.z);
+        this.mesh.castShadow = true;
+        this.mesh.receiveShadow = true;
+        this.mesh.name = this.name;
+        this.mesh.rotateX(this.rotation.x);
+        this.mesh.rotateY(this.rotation.y);
+        this.mesh.rotateZ(this.rotation.z);
+        this.mesh.translateX(this.translation.x-this.center.x);
+        this.mesh.translateY(this.translation.y-this.center.y);
+        this.mesh.translateZ(this.translation.z);
 
-        this.group.add(mesh);
+        //this.group.add(mesh);
 
-        this.group.castShadow = true;
+        this.mesh.castShadow = true;
       }
     }
   },
 
   getMeshGroup: function() {
     return this.group;
+  },
+
+  getMesh: function() {
+    return this.mesh;
   },
 
   generateSVG: function() {
@@ -154,6 +160,7 @@ Panel.prototype = {
     this.SVG += 'M'+mX+','+mY+' ';
 
     var i = 1;
+
     if (this.slots_right) {
       if (!this.slots_invert_right) {
         for (i = 1;i<this.slots_number_height;i+=2) {

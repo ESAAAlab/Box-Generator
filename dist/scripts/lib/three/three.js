@@ -33905,7 +33905,7 @@ THREE.ShapeUtils = {
 					// Sometimes warning is fine, especially polygons are triangulated in reverse.
 					console.warn( 'THREE.ShapeUtils: Unable to triangulate polygon! in triangulate()' );
 
-					if (!DEBUG) {
+					if (!globalParameters.debug) {
 						ee.emitEvent('triangulation-failed',[this]);
 					}
 
@@ -37393,7 +37393,7 @@ THREE.ExtrudeGeometry = function ( shapes, options ) {
 	THREE.Geometry.call( this );
 
 	this.type = 'ExtrudeGeometry';
-	if (!DEBUG) {
+	if (!globalParameters.debug) {
 		ee.addListener('triangulation-failed',triangulationFailed);
 		function triangulationFailed(obj) {
 			ee.emitEvent('triangulation-error',[options.name]);

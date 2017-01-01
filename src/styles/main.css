@@ -15,9 +15,47 @@ body {
   position: absolute;
   top: 0px; width: 100%;
   padding: 5px;
-
 }
 
 a {
   color: red;
 }
+
+h1,
+h2,
+h3,
+p {
+  margin: 10px;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.threeContainer {
+  position:absolute;
+}
+
+.gridster .gs-w {
+  background: #61A9CF;
+  cursor: pointer;
+}
+.gridster .player {
+  background: #BBB;
+}
+.gridster .preview-holder {
+  background: red;
+}
+.gridster ul {
+  list-style-type: none;
+  background-color: transparent;
+}
+.gridster li {
+  list-style: none;
+}
+.gridster-box {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+/*# sourceMappingURL=demos/assets/css/demo.css.map */

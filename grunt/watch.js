@@ -10,8 +10,8 @@ module.exports = {
     ],
     tasks: [
       'jshint',
-      'copy'
-      //'uglify'
+      'copy',
+      'inject'
     ]
   },
 

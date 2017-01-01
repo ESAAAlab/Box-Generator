@@ -1,21 +1,27 @@
-var oThickness = 6;
-var oWidth = 300;
-var oHeight = 300;
-var oDepth = 300;
-var oDepthSlots = 5;
-var oWidthSlots = 5;
-var oHeightSlots = 5;
-var oOffset = 0;
-var oRows = 8;
-var oColumns = 6;
-var oBottom = true;
-var sThickness = 3;
-
 var containerGroup;
+var boxes = [];
 var invalid = [];
 
-function updateContainer() {
-  containerGroup.generateBox();
+function updateBoxes() {
+  containerGroup.updateValuesFromGlobalParameter();
+
+  for (var b in boxes) {
+    scene.remove(boxes[b]);
+    scene.remove(boxes[b].group);
+  }
+
+  boxes = [];
+
+  var gridIndex = 1;
+  $('.gs-w').each(function(){
+    this.id = gridIndex;
+    gridIndex++;
+    this.w = $(this).attr('data-sizex');
+    this.h = $(this).attr('data-sizey');
+    this.x = $(this).attr('data-col');
+    this.y = $(this).attr('data-row');
+    boxes.push(createDrawer(this.id,containerGroup, this.w, this.h, this.x, this.y));
+  });
 
   for (var i = 0;i<invalid.length;i++) {
     var item = invalid[i];
@@ -25,37 +31,28 @@ function updateContainer() {
   render();
 }
 
-function generateContainer() {
+function createDrawer(id, mainContainer, unitWidth, unitHeight, x, y) {
+  if (id !== undefined && id !== null) {
+    var d = new Box({
+      name:'drawer_'+id,
+      isMainContainer: false,
+      mainContainer: mainContainer,
+      unitWidth: unitWidth,
+      unitHeight: unitHeight,
+      unitDepth: 1,
+      top: false,
+      delta: {x:x,y:y,z:0}
+    });
+    return d;
+  }
+}
+
+function createContainer() {
   containerGroup = new Box({
     name:'container',
     isMainContainer: true,
-    width: oWidth,
-    height: oHeight,
-    depth: oDepth,
-    thickness: oThickness,
-    separation_thickness: sThickness,
-    separation_columns: oColumns,
-    separation_rows: oRows,
-    slots_number_width: oWidthSlots,
-    slots_number_height: oHeightSlots,
-    slots_number_depth: oDepthSlots,
+    front:false
   });
 
-  // var separation = new Panel({
-  //   name:'sep',
-  //   width: oWidth,
-  //   height: oDepth,
-  //   thickness: sThickness,
-  //   //slots_size: oThickness,
-  //   slots_left: false,
-  //   slots_top: true,
-  //   slots_invert_top: true,
-  //   slots_right: true,
-  //   slots_invert_right: true,
-  //   slots_bottom: true,
-  //   slots_invert_bottom: true,
-  // });
-  // scene.add(separation.getMeshGroup());
-
-  updateContainer();
+  updateBoxes();
 }
